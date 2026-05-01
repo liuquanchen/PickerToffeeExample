@@ -1,0 +1,52 @@
+{
+    "clk": {
+        "High": -1,
+        "Low": 0,
+        "Pin": "input",
+        "_": true
+    },
+    "data": {
+        "i": {
+            "High": 31,
+            "Low": 0,
+            "Pin": "input",
+            "_": true
+        },
+        "o": {
+            "High": 31,
+            "Low": 0,
+            "Pin": "output",
+            "_": true
+        }
+    },
+    "empty_o": {
+        "High": -1,
+        "Low": 0,
+        "Pin": "output",
+        "_": true
+    },
+    "full_o": {
+        "High": -1,
+        "Low": 0,
+        "Pin": "output",
+        "_": true
+    },
+    "re_i": {
+        "High": -1,
+        "Low": 0,
+        "Pin": "input",
+        "_": true
+    },
+    "rst_n": {
+        "High": -1,
+        "Low": 0,
+        "Pin": "input",
+        "_": true
+    },
+    "we_i": {
+        "High": -1,
+        "Low": 0,
+        "Pin": "input",
+        "_": true
+    }
+}

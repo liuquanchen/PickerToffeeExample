@@ -1,0 +1,26 @@
+{
+    "clk": {
+        "High": -1,
+        "Low": 0,
+        "Pin": "input",
+        "_": true
+    },
+    "random_number": {
+        "High": 15,
+        "Low": 0,
+        "Pin": "output",
+        "_": true
+    },
+    "reset": {
+        "High": -1,
+        "Low": 0,
+        "Pin": "input",
+        "_": true
+    },
+    "seed": {
+        "High": 15,
+        "Low": 0,
+        "Pin": "input",
+        "_": true
+    }
+}
