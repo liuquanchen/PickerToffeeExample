@@ -3,3 +3,6 @@
 
 # FST waveform files
 *.fst
+
+# SyncFIFO
+fifo/SyncFIFO/
