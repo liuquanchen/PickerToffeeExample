@@ -1,7 +1,7 @@
 from SyncFIFO import DUTSyncFIFO
 import toffee_test
 import toffee
-from Bundle import SyncFIFOBundle
+from env import SyncFIFOBundle, InternalBundle, FIFORefModelFunc
 
 
 @toffee_test.testcase

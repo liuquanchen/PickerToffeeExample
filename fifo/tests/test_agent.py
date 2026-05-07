@@ -1,5 +1,4 @@
-from agent import FIFOAgent
-from Bundle import SyncFIFOBundle, InternalBundle
+from env import FIFOAgent, SyncFIFOEnvFunc, SyncFIFOBundle, InternalBundle, FIFORefModelFunc
 from SyncFIFO import DUTSyncFIFO
 import toffee_test
 import toffee 

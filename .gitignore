@@ -4,5 +4,8 @@
 # FST waveform files
 *.fst
 
+# Data files
+*.dat
+
 # SyncFIFO
 fifo/SyncFIFO/

@@ -1,4 +1,4 @@
-from env import FIFOAgent, SyncFIFOEnvFunc, SyncFIFOBundle, InternalBundle, FIFORefModelFunc
+from env import FIFOAgent, SyncFIFOEnvCtrl, SyncFIFOBundle, InternalBundle, FIFORefModelCtrl
 from SyncFIFO import DUTSyncFIFO
 from toffee import Executor
 from toffee.funcov import CovGroup
@@ -24,7 +24,7 @@ async def test_reset(FIFO_agent):
             print(f"Cycle{i}: dequeue")
         else:
             await FIFO_agent.enqueue(i+10)
-            print(f"Cycle{i}: enqueue {i+10}")
+            print(f"Cycle{i}: DUT enqueue data: {i+10}")
 
     await FIFO_agent.bundle.step()
     assert FIFO_agent.internal.counter.value !=0, "counter is 0"
@@ -107,43 +107,43 @@ async def FIFO_agent(toffee_request: toffee_test.ToffeeRequest):
     fifo_bundle.bind(dut)                                                 
 
     # Create Env
-    fifo_agent = FIFOAgent(fifo_bundle, fifo_internal_bundle)
+    fifo_env = SyncFIFOEnvCtrl(fifo_bundle, fifo_internal_bundle)
     
     # Add Custom Group
-    cover_reset = [get_cover_group_fifo_state(fifo_agent)]
+    cover_reset = [get_cover_group_fifo_state(fifo_env.fifo_agent)]
 
     # Async Func
     async def Reset_Sequence():                                                                 # RST-01 功能覆盖点
         await dut.ACondition(
-            lambda: fifo_agent.status.rst_n.value == 0 
-                    and 0 < fifo_agent.internal.counter.value < 16
+            lambda: fifo_env.fifo_agent.status.rst_n.value == 0 
+                    and 0 < fifo_env.fifo_agent.internal.counter.value < 16
         )
 
         await dut.ACondition(
-            lambda: fifo_agent.internal.counter.value == 0
-                    and fifo_agent.internal.wptr.value == 0
-                    and fifo_agent.internal.rptr.value == 0
+            lambda: fifo_env.fifo_agent.internal.counter.value == 0
+                    and fifo_env.fifo_agent.internal.wptr.value == 0
+                    and fifo_env.fifo_agent.internal.rptr.value == 0
         )
         cover_reset[0].sample()
 
     async def Reset_Hold_Sequence():                                                            # RST-02 功能覆盖点
         await dut.ACondition(
-            lambda: fifo_agent.status.rst_n.value == 0
+            lambda: fifo_env.fifo_agent.status.rst_n.value == 0
         )
-        await fifo_agent.bundle.step()
+        await fifo_env.fifo_agent.bundle.step()
         cover_reset[0].sample()
 
     async def Reset_Release_Sequence():                                                         # RST-03 功能覆盖点
         await dut.ACondition(
-            lambda: fifo_agent.status.rst_n.value == 1
+            lambda: fifo_env.fifo_agent.status.rst_n.value == 1
         )
-        prev_wptr = fifo_agent.internal.wptr.value
-        prev_rptr = fifo_agent.internal.rptr.value
-        prev_counter = fifo_agent.internal.counter.value
-        await fifo_agent.bundle.step()
-        if (fifo_agent.internal.wptr.value == prev_wptr and
-            fifo_agent.internal.rptr.value == prev_rptr and
-            fifo_agent.internal.counter.value == prev_counter):
+        prev_wptr = fifo_env.fifo_agent.internal.wptr.value
+        prev_rptr = fifo_env.fifo_agent.internal.rptr.value
+        prev_counter = fifo_env.fifo_agent.internal.counter.value
+        await fifo_env.fifo_agent.bundle.step()
+        if (fifo_env.fifo_agent.internal.wptr.value == prev_wptr and
+            fifo_env.fifo_agent.internal.rptr.value == prev_rptr and
+            fifo_env.fifo_agent.internal.counter.value == prev_counter):
             cover_reset[0].sample()
     
     create_task(Reset_Sequence())
@@ -151,6 +151,6 @@ async def FIFO_agent(toffee_request: toffee_test.ToffeeRequest):
     create_task(Reset_Release_Sequence())
 
     # Return Agent
-    yield fifo_agent
+    yield fifo_env.fifo_agent
 
     toffee_request.cov_groups.extend(cover_reset)
